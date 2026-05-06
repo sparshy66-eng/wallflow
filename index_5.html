@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WallFlow – 4K Live Wallpapers</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--surface:#13131a;--card:#1a1a24;--border:#2a2a3a;--accent:#6c63ff;--accent2:#ff6584;--text:#f0f0ff;--muted:#8888aa}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh}
+header{display:flex;align-items:center;justify-content:space-between;padding:18px 40px;border-bottom:1px solid var(--border);background:rgba(10,10,15,0.95);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:3px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+#adminBtn{background:none;border:1px solid var(--border);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:.85rem;transition:all .2s;margin-right:8px}
+#adminBtn:hover{border-color:var(--accent);color:var(--accent)}
+#uploadBtn{display:none;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:.9rem;font-weight:600}
+.hero{text-align:center;padding:60px 20px 40px;background:radial-gradient(ellipse at 50% 0%,rgba(108,99,255,.12) 0%,transparent 70%)}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,5rem);letter-spacing:4px;line-height:1}
+.hero p{color:var(--muted);margin-top:12px}
+.stats{display:flex;gap:32px;justify-content:center;margin-top:24px}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--accent)}
+.stat-label{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.filters{display:flex;gap:8px;padding:20px 40px;overflow-x:auto;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.filter-btn{background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:7px 18px;border-radius:20px;cursor:pointer;font-size:.85rem;white-space:nowrap;transition:all .2s;font-family:'DM Sans',sans-serif}
+.filter-btn.active,.filter-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:20px;padding:20px 40px 60px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:transform .25s,box-shadow .25s;position:relative;aspect-ratio:16/9;cursor:pointer}
+.card:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,.5)}
+.card video{width:100%;height:100%;object-fit:cover;display:block}
+.card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,transparent 50%);opacity:0;transition:opacity .25s;display:flex;flex-direction:column;justify-content:flex-end;padding:20px}
+.card:hover .card-overlay{opacity:1}
+.card-title{font-weight:600;font-size:1rem}
+.card-meta{font-size:.78rem;color:var(--muted);margin-top:4px}
+.card-actions{display:flex;gap:8px;margin-top:12px}
+.btn-dl{background:var(--accent);color:#fff;border:none;padding:8px 16px;border-radius:7px;cursor:pointer;font-size:.82rem;font-weight:600}
+.badge{position:absolute;top:12px;right:12px;background:rgba(108,99,255,.85);color:#fff;font-size:.7rem;padding:3px 10px;border-radius:20px;font-weight:600;letter-spacing:1px}
+.empty{grid-column:1/-1;text-align:center;padding:80px 20px;color:var(--muted)}
+.empty-icon{font-size:3rem;margin-bottom:16px}
+.empty h3{font-size:1.2rem;margin-bottom:8px;color:var(--text)}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.modal-bg.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;width:90%;max-width:460px}
+.modal h2{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:2px;margin-bottom:20px}
+.modal input,.modal select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:12px 16px;border-radius:10px;font-size:.9rem;margin-bottom:12px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s}
+.modal input:focus,.modal select:focus{border-color:var(--accent)}
+.modal-actions{display:flex;gap:10px;margin-top:8px}
+.btn-primary{flex:1;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;padding:12px;border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:600;font-family:'DM Sans',sans-serif}
+.btn-cancel{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:12px 20px;border-radius:10px;cursor:pointer;font-size:.9rem;font-family:'DM Sans',sans-serif}
+.drop-zone{border:2px dashed var(--border);border-radius:12px;padding:40px;text-align:center;color:var(--muted);margin-bottom:16px;transition:border-color .2s;cursor:pointer}
+.drop-zone:hover,.drop-zone.drag{border-color:var(--accent);color:var(--accent)}
+.drop-icon{font-size:2rem;margin-bottom:10px}
+.prog-wrap{display:none;height:6px;background:var(--border);border-radius:3px;margin:12px 0;overflow:hidden}
+.prog-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0%;transition:width .3s}
+.spinner-wrap{display:none;text-align:center;padding:60px;color:var(--muted);grid-column:1/-1}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+footer{text-align:center;padding:20px;color:var(--muted);font-size:.75rem;border-top:1px solid var(--border)}
+@media(max-width:600px){header{padding:14px 16px}.gallery{grid-template-columns:1fr;padding:16px}.filters{padding:12px 16px}.hero{padding:40px 16px 24px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">WallFlow</div>
+  <div>
+    <button id="adminBtn" onclick="toggleAdmin()">🔒 Admin</button>
+    <button id="uploadBtn" onclick="openUpload()">+ Upload</button>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>4K Live Wallpapers<br>for PC</h1>
+  <p>Free widescreen wallpapers — download &amp; use instantly</p>
+  <div class="stats">
+    <div class="stat"><div class="stat-num" id="totalCount">0</div><div class="stat-label">Wallpapers</div></div>
+    <div class="stat"><div class="stat-num">4K</div><div class="stat-label">Resolution</div></div>
+    <div class="stat"><div class="stat-num">16:9</div><div class="stat-label">PC Widescreen</div></div>
+  </div>
+</section>
+
+<div class="filters">
+  <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+  <button class="filter-btn" onclick="setFilter('nature',this)">Nature</button>
+  <button class="filter-btn" onclick="setFilter('space',this)">Space</button>
+  <button class="filter-btn" onclick="setFilter('abstract',this)">Abstract</button>
+  <button class="filter-btn" onclick="setFilter('city',this)">City</button>
+  <button class="filter-btn" onclick="setFilter('gaming',this)">Gaming</button>
+  <button class="filter-btn" onclick="setFilter('anime',this)">Anime</button>
+  <button class="filter-btn" onclick="setFilter('other',this)">Other</button>
+</div>
+
+<div class="gallery" id="gallery">
+  <div class="spinner-wrap" id="loading" style="display:block"><div class="spinner"></div><p>Loading wallpapers...</p></div>
+</div>
+
+<!-- Login Modal -->
+<div class="modal-bg" id="loginModal">
+  <div class="modal">
+    <h2>Admin Login</h2>
+    <input type="password" id="passInput" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
+    <p id="loginErr" style="color:#ff6584;font-size:.82rem;margin-bottom:8px;display:none">Wrong password!</p>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="doLogin()">Login</button>
+      <button class="btn-cancel" onclick="closeModal('loginModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Upload Modal -->
+<div class="modal-bg" id="uploadModal">
+  <div class="modal">
+    <h2>Upload Wallpaper</h2>
+    <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+      <input type="file" id="fileInput" accept="video/*" style="display:none" onchange="fileSelected(this.files[0])">
+      <div class="drop-icon">🎬</div>
+      <p id="dropText">Click or drag &amp; drop video here</p>
+      <p style="font-size:.78rem;margin-top:6px">MP4, WEBM, MOV — up to 500MB</p>
+    </div>
+    <div class="prog-wrap" id="progWrap"><div class="prog-bar" id="progBar"></div></div>
+    <input type="text" id="wpTitle" placeholder="Wallpaper Title">
+    <select id="wpCat">
+      <option value="">Select Category</option>
+      <option value="nature">Nature</option>
+      <option value="space">Space</option>
+      <option value="abstract">Abstract</option>
+      <option value="city">City</option>
+      <option value="gaming">Gaming</option>
+      <option value="anime">Anime</option>
+      <option value="other">Other</option>
+    </select>
+    <select id="wpRes">
+      <option value="4K">4K (3840x2160)</option>
+      <option value="1440p">1440p (2560x1440)</option>
+      <option value="1080p">1080p (1920x1080)</option>
+    </select>
+    <div class="modal-actions">
+      <button class="btn-primary" id="pubBtn" onclick="doUpload()">Publish</button>
+      <button class="btn-cancel" onclick="closeModal('uploadModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="modal-bg" id="detailModal">
+  <div class="modal" style="max-width:640px">
+    <video id="detailVid" controls style="width:100%;border-radius:10px;aspect-ratio:16/9;background:#000;margin-bottom:16px"></video>
+    <h2 id="detailTitle" style="margin-bottom:6px;font-size:1.4rem"></h2>
+    <p id="detailMeta" style="color:var(--muted);font-size:.85rem;margin-bottom:16px"></p>
+    <div class="modal-actions">
+      <button class="btn-primary" id="detailDl">Download</button>
+      <button class="btn-cancel" onclick="closeModal('detailModal');document.getElementById('detailVid').pause()">Close</button>
+    </div>
+  </div>
+</div>
+
+<footer>created by sparsh yadav</footer>
+
+<script>
+var CLOUD='duhkpjguc',PRESET='wallflow_uploads',PASS='sparsh201011';
+var isAdmin=false,wallpapers=[],filter='all',selFile=null;
+
+async function loadWallpapers(){
+  document.getElementById('loading').style.display='block';
+  try{
+    var r=await fetch('https://res.cloudinary.com/'+CLOUD+'/video/list/wallflow.json');
+    var d=await r.json();
+    wallpapers=(d.resources||[]).map(function(x){
+      var ctx=x.context&&x.context.custom||{};
+      return{id:x.public_id,url:'https://res.cloudinary.com/'+CLOUD+'/video/upload/'+x.public_id+'.mp4',title:ctx.title||x.public_id.split('/').pop(),category:ctx.category||'other',res:ctx.resolution||'4K'};
+    });
+  }catch(e){wallpapers=[];}
+  render();
+}
+
+function render(){
+  var g=document.getElementById('gallery');
+  document.getElementById('loading').style.display='none';
+  var list=filter==='all'?wallpapers:wallpapers.filter(function(w){return w.category===filter;});
+  document.getElementById('totalCount').textContent=wallpapers.length;
+  if(!list.length){
+    g.innerHTML='<div class="empty"><div class="empty-icon">🎬</div><h3>No wallpapers yet</h3><p>'+(isAdmin?'Click Upload to add your first wallpaper!':'Check back soon!')+'</p></div>';
+    return;
+  }
+  g.innerHTML=list.map(function(w){
+    return'<div class="card" onclick="openDetail(\''+w.url+'\',\''+esc(w.title)+'\',\''+w.category+'\',\''+w.res+'\')"><video src="'+w.url+'" muted loop playsinline preload="metadata" onmouseenter="this.play()" onmouseleave="this.pause();this.currentTime=0"></video><div class="badge">'+w.res+'</div><div class="card-overlay"><div class="card-title">'+esc(w.title)+'</div><div class="card-meta">'+w.category+' - '+w.res+' - 16:9 PC</div><div class="card-actions"><button class="btn-dl" onclick="event.stopPropagation();dl(\''+w.url+'\',\''+esc(w.title)+'\')">Download</button></div></div></div>';
+  }).join('');
+}
+
+function setFilter(f,btn){
+  filter=f;
+  document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  render();
+}
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+
+function toggleAdmin(){
+  if(isAdmin){isAdmin=false;document.getElementById('uploadBtn').style.display='none';document.getElementById('adminBtn').textContent='🔒 Admin';}
+  else openModal('loginModal');
+}
+
+function doLogin(){
+  if(document.getElementById('passInput').value===PASS){
+    isAdmin=true;closeModal('loginModal');
+    document.getElementById('uploadBtn').style.display='inline-block';
+    document.getElementById('adminBtn').textContent='🔓 Logout';
+    document.getElementById('passInput').value='';
+    document.getElementById('loginErr').style.display='none';
+  }else{document.getElementById('loginErr').style.display='block';}
+}
+
+function openUpload(){
+  selFile=null;
+  document.getElementById('dropText').textContent='Click or drag & drop video here';
+  document.getElementById('progWrap').style.display='none';
+  document.getElementById('progBar').style.width='0%';
+  document.getElementById('wpTitle').value='';
+  document.getElementById('wpCat').value='';
+  document.getElementById('wpRes').value='4K';
+  document.getElementById('pubBtn').textContent='Publish';
+  document.getElementById('pubBtn').disabled=false;
+  openModal('uploadModal');
+}
+
+document.getElementById('dropZone').addEventListener('dragover',function(e){e.preventDefault();document.getElementById('dropZone').classList.add('drag');});
+document.getElementById('dropZone').addEventListener('dragleave',function(){document.getElementById('dropZone').classList.remove('drag');});
+document.getElementById('dropZone').addEventListener('drop',function(e){e.preventDefault();document.getElementById('dropZone').classList.remove('drag');fileSelected(e.dataTransfer.files[0]);});
+
+function fileSelected(f){
+  if(!f||!f.type.startsWith('video/')){alert('Please select a video file!');return;}
+  if(f.size>500*1024*1024){alert('File too large! Max 500MB.');return;}
+  selFile=f;
+  document.getElementById('dropText').textContent='Selected: '+f.name;
+  if(!document.getElementById('wpTitle').value)
+    document.getElementById('wpTitle').value=f.name.replace(/\.[^.]+$/,'').replace(/[-_]/g,' ');
+}
+
+function doUpload(){
+  if(!selFile){alert('Please select a video file first!');return;}
+  var title=document.getElementById('wpTitle').value.trim()||'Untitled';
+  var cat=document.getElementById('wpCat').value||'other';
+  var res=document.getElementById('wpRes').value;
+  var btn=document.getElementById('pubBtn');
+  btn.textContent='Uploading...';btn.disabled=true;
+  document.getElementById('progWrap').style.display='block';
+  var fd=new FormData();
+  fd.append('file',selFile);
+  fd.append('upload_preset',PRESET);
+  fd.append('tags','wallflow');
+  fd.append('context','title='+title+'|category='+cat+'|resolution='+res);
+  var xhr=new XMLHttpRequest();
+  xhr.upload.onprogress=function(e){if(e.lengthComputable)document.getElementById('progBar').style.width=Math.round(e.loaded/e.total*100)+'%';};
+  xhr.open('POST','https://api.cloudinary.com/v1_1/'+CLOUD+'/video/upload');
+  xhr.onload=function(){
+    try{
+      var r=JSON.parse(xhr.responseText);
+      if(r.secure_url){
+        wallpapers.unshift({id:r.public_id,url:r.secure_url,title:title,category:cat,res:res});
+        render();closeModal('uploadModal');
+        alert('Wallpaper uploaded! Everyone can now see it.');
+      }else{alert('Upload failed: '+(r.error&&r.error.message||'Unknown error'));}
+    }catch(e){alert('Upload error');}
+    btn.textContent='Publish';btn.disabled=false;
+  };
+  xhr.onerror=function(){alert('Upload failed. Check internet.');btn.textContent='Publish';btn.disabled=false;};
+  xhr.send(fd);
+}
+
+function openDetail(url,title,cat,res){
+  document.getElementById('detailVid').src=url;
+  document.getElementById('detailTitle').textContent=title;
+  document.getElementById('detailMeta').textContent=cat+' - '+res+' - PC 16:9 Widescreen';
+  document.getElementById('detailDl').onclick=function(){dl(url,title);};
+  openModal('detailModal');
+}
+
+function dl(url,title){
+  var a=document.createElement('a');a.href=url;a.download=title+'.mp4';a.target='_blank';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+}
+
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-bg').forEach(function(m){
+  m.addEventListener('click',function(e){if(e.target===m){m.classList.remove('open');document.getElementById('detailVid').pause();}});
+});
+
+loadWallpapers();
+</script>
+</body>
+</html>
