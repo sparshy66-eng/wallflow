@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="google-adsense-account" content="ca-pub-4916076151987525">
+<title>WallFlow - 4K PC Live Wallpapers</title>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4916076151987525" crossorigin="anonymous"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#0a0a0f;color:#f0eee8;min-height:100vh}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:0.5px solid rgba(255,255,255,0.1);background:rgba(10,10,15,0.97);position:sticky;top:0;z-index:100}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.35rem;background:linear-gradient(135deg,#a78bfa,#38bdf8,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:1.5rem;list-style:none;font-size:0.85rem;color:rgba(240,238,232,0.5)}
+.nav-links li{cursor:pointer;transition:color 0.2s}
+.nav-links li:hover{color:#f0eee8}
+.upload-btn-nav{background:#a78bfa;color:#0a0a0f;border:none;padding:0.45rem 1.1rem;border-radius:999px;font-family:'DM Sans',sans-serif;font-weight:500;font-size:0.83rem;cursor:pointer;display:none}
+.hero{text-align:center;padding:3.5rem 2rem 2rem}
+.hero h1{font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:800;line-height:1.1;letter-spacing:-0.03em;margin-bottom:0.75rem}
+.hero h1 span{background:linear-gradient(135deg,#a78bfa,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:0.95rem;color:rgba(240,238,232,0.5);max-width:420px;margin:0 auto 2rem;line-height:1.6;font-weight:300}
+.upload-section{display:none;max-width:700px;margin:0 auto 1.25rem}
+.upload-zone{border:1.5px dashed rgba(167,139,250,0.4);border-radius:18px;padding:2rem;text-align:center;cursor:pointer;transition:all 0.3s;background:rgba(167,139,250,0.04)}
+.upload-zone:hover,.upload-zone.drag-over{border-color:#a78bfa;background:rgba(167,139,250,0.08)}
+.upload-icon{width:48px;height:48px;margin:0 auto 1rem;background:rgba(167,139,250,0.15);border-radius:14px;display:flex;align-items:center;justify-content:center}
+.upload-zone h3{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:0.4rem}
+.upload-zone p{font-size:0.8rem;color:rgba(240,238,232,0.4);margin-bottom:1.2rem}
+.browse-btn{background:#a78bfa;color:#0a0a0f;border:none;padding:0.6rem 1.6rem;border-radius:999px;font-family:'DM Sans',sans-serif;font-weight:500;font-size:0.85rem;cursor:pointer}
+#fileInput{display:none}
+.viewer-note{max-width:500px;margin:0 auto 1.5rem;background:rgba(56,189,248,0.06);border:0.5px solid rgba(56,189,248,0.2);border-radius:12px;padding:0.85rem 1.25rem;font-size:0.82rem;color:rgba(240,238,232,0.5);text-align:center}
+.tags-row{display:flex;gap:0.45rem;justify-content:center;flex-wrap:wrap;margin-bottom:2.5rem}
+.tag{font-size:0.72rem;padding:0.28rem 0.8rem;border-radius:999px;border:0.5px solid rgba(255,255,255,0.12);color:rgba(240,238,232,0.45);cursor:pointer;transition:all 0.2s}
+.tag:hover{border-color:#a78bfa;color:#a78bfa}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;padding:0 2rem 2rem}
+.stat-card{background:rgba(167,139,250,0.06);border:0.5px solid rgba(167,139,250,0.15);border-radius:12px;padding:1rem;text-align:center}
+.stat-num{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,#a78bfa,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-label{font-size:0.75rem;color:rgba(240,238,232,0.4);margin-top:0.2rem}
+.section-header{display:flex;align-items:center;justify-content:space-between;padding:0 2rem;margin-bottom:1.25rem}
+.section-header h2{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700}
+.filter-tabs{display:flex;gap:0.35rem;flex-wrap:wrap}
+.filter-tab{font-size:0.75rem;padding:0.3rem 0.85rem;border-radius:999px;border:0.5px solid rgba(255,255,255,0.12);background:transparent;color:rgba(240,238,232,0.5);cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif}
+.filter-tab.active{background:rgba(167,139,250,0.2);border-color:rgba(167,139,250,0.5);color:#a78bfa}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:0.9rem;padding:0 2rem 3rem}
+.wallpaper-card{border-radius:12px;overflow:hidden;position:relative;aspect-ratio:16/9;cursor:pointer;background:#111}
+.wallpaper-card video{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s}
+.wallpaper-card:hover video{transform:scale(1.04)}
+.card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,transparent 55%);opacity:0;transition:opacity 0.3s;display:flex;align-items:flex-end;padding:0.85rem}
+.wallpaper-card:hover .card-overlay{opacity:1}
+.card-info{flex:1}
+.card-title{font-size:0.82rem;font-weight:500;margin-bottom:0.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
+.card-meta{font-size:0.68rem;color:rgba(255,255,255,0.55)}
+.card-actions{display:flex;gap:0.35rem}
+.card-action-btn{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.18);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:white;font-size:15px;transition:background 0.2s}
+.card-action-btn:hover{background:rgba(167,139,250,0.65)}
+.live-badge{position:absolute;top:0.55rem;left:0.55rem;background:rgba(167,139,250,0.9);font-size:0.6rem;font-weight:700;letter-spacing:0.08em;padding:0.18rem 0.5rem;border-radius:999px;color:#0a0a0f;text-transform:uppercase}
+.res-badge{position:absolute;top:0.55rem;right:0.55rem;background:rgba(10,10,15,0.75);font-size:0.62rem;font-weight:500;padding:0.18rem 0.48rem;border-radius:6px;color:rgba(240,238,232,0.85)}
+.uploading-card{border-radius:12px;overflow:hidden;position:relative;aspect-ratio:16/9;background:rgba(167,139,250,0.07);border:1px dashed rgba(167,139,250,0.3)}
+.uploading-card video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.progress-overlay{position:absolute;inset:0;background:rgba(10,10,15,0.8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.65rem;z-index:2}
+.progress-bar-wrap{width:65%;height:4px;background:rgba(255,255,255,0.1);border-radius:999px;overflow:hidden}
+.progress-bar-fill{height:100%;background:#a78bfa;border-radius:999px;transition:width 0.25s}
+.progress-text{font-size:0.73rem;color:rgba(240,238,232,0.65)}
+.loading-wrap{grid-column:1/-1;text-align:center;padding:3rem;color:rgba(240,238,232,0.4);font-size:0.9rem}
+.spinner{width:32px;height:32px;border:2px solid rgba(167,139,250,0.2);border-top-color:#a78bfa;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty-state{grid-column:1/-1;text-align:center;padding:3rem 1rem;color:rgba(240,238,232,0.3);font-size:0.9rem}
+.toast{position:fixed;bottom:1.75rem;right:1.75rem;background:#a78bfa;color:#0a0a0f;padding:0.65rem 1.3rem;border-radius:10px;font-size:0.85rem;font-weight:500;font-family:'DM Sans',sans-serif;z-index:999;transform:translateY(70px);opacity:0;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);pointer-events:none}
+.toast.show{transform:translateY(0);opacity:1}
+.admin-login-btn{position:fixed;bottom:1.5rem;left:1.5rem;background:transparent;border:0.5px solid rgba(255,255,255,0.08);color:rgba(240,238,232,0.15);font-size:0.65rem;padding:0.35rem 0.8rem;border-radius:999px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.3s;z-index:50}
+.admin-login-btn:hover{color:rgba(240,238,232,0.4)}
+.admin-badge{display:none;position:fixed;bottom:1.5rem;left:1.5rem;background:rgba(167,139,250,0.15);border:0.5px solid rgba(167,139,250,0.35);color:#a78bfa;font-size:0.7rem;padding:0.4rem 1rem;border-radius:999px;cursor:pointer;font-family:'DM Sans',sans-serif;z-index:50;align-items:center}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:400;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+.modal-bg.open{display:flex}
+.modal-box{background:#131318;border:0.5px solid rgba(255,255,255,0.1);border-radius:20px;padding:2rem;max-width:380px;width:90%;text-align:center}
+.modal-box h3{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:0.4rem;color:#f0eee8;text-align:left}
+.modal-box p{font-size:0.8rem;color:rgba(240,238,232,0.4);margin-bottom:1.25rem;text-align:left}
+.pw-input{width:100%;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.12);border-radius:10px;padding:0.7rem 1rem;color:#f0eee8;font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;text-align:center;letter-spacing:0.08em;margin-bottom:0.75rem}
+.pw-error{color:#f87171;font-size:0.78rem;margin-bottom:0.75rem;display:none}
+.form-group{margin-bottom:0.85rem;text-align:left}
+.form-group label{display:block;font-size:0.76rem;color:rgba(240,238,232,0.5);margin-bottom:0.35rem}
+.form-group input,.form-group select{width:100%;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.12);border-radius:9px;padding:0.6rem 0.9rem;color:#f0eee8;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none}
+.form-group select option{background:#131318}
+.modal-actions{display:flex;gap:0.65rem;margin-top:1.25rem}
+.btn-primary{flex:1;background:#a78bfa;color:#0a0a0f;border:none;padding:0.65rem;border-radius:9px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;font-size:0.87rem}
+.btn-secondary{flex:1;background:transparent;color:rgba(240,238,232,0.55);border:0.5px solid rgba(255,255,255,0.14);padding:0.65rem;border-radius:9px;font-family:'DM Sans',sans-serif;cursor:pointer;font-size:0.87rem}
+.pw-btn{width:100%;background:#a78bfa;color:#0a0a0f;border:none;padding:0.7rem;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;font-size:0.9rem;margin-bottom:0.65rem}
+.pw-cancel{width:100%;background:transparent;color:rgba(240,238,232,0.4);border:0.5px solid rgba(255,255,255,0.1);padding:0.6rem;border-radius:10px;font-family:'DM Sans',sans-serif;cursor:pointer;font-size:0.83rem}
+footer{text-align:center;padding:2rem;border-top:0.5px solid rgba(255,255,255,0.07);font-size:0.78rem;color:rgba(240,238,232,0.3)}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="logo">WallFlow</div>
+  <ul class="nav-links">
+    <li onclick="document.getElementById('gallerySection').scrollIntoView({behavior:'smooth'})">Gallery</li>
+  </ul>
+  <button class="upload-btn-nav" id="navUploadBtn" onclick="document.getElementById('fileInput').click()">+ Upload</button>
+</nav>
+
+<section class="hero">
+  <h1>4K <span>PC Live</span> Wallpapers<br>For Everyone</h1>
+  <p>Discover and download stunning widescreen live wallpapers — 16:9 horizontal, made for desktop PCs. Free forever.</p>
+  <div class="upload-section" id="uploadSection">
+    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+      <div class="upload-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+      </div>
+      <h3>Drop your PC wallpaper here</h3>
+      <p>MP4, MOV, WEBM &middot; 16:9 &middot; Up to 100MB &middot; 4K recommended</p>
+      <button class="browse-btn" onclick="event.stopPropagation();document.getElementById('fileInput').click()">Browse Files</button>
+    </div>
+  </div>
+  <input type="file" id="fileInput" accept="video/*" multiple>
+  <div class="viewer-note" id="viewerNote">🎨 Browse and download 4K PC live wallpapers below. New wallpapers added regularly!</div>
+  <div class="tags-row">
+    <span class="tag" onclick="filterByTag('nature')">Nature</span>
+    <span class="tag" onclick="filterByTag('abstract')">Abstract</span>
+    <span class="tag" onclick="filterByTag('space')">Space</span>
+    <span class="tag" onclick="filterByTag('city')">City</span>
+    <span class="tag" onclick="filterByTag('aesthetic')">Aesthetic</span>
+    <span class="tag" onclick="filterByTag('dark')">Dark</span>
+    <span class="tag" onclick="filterByTag('minimal')">Minimal</span>
+    <span class="tag" onclick="filterByTag('anime')">Anime</span>
+    <span class="tag" onclick="filterByTag('car')">Car</span>
+  </div>
+</section>
+
+<div class="stats-row">
+  <div class="stat-card"><div class="stat-num" id="statCount">0</div><div class="stat-label">Wallpapers uploaded</div></div>
+  <div class="stat-card"><div class="stat-num">16:9</div><div class="stat-label">PC widescreen format</div></div>
+  <div class="stat-card"><div class="stat-num">Free</div><div class="stat-label">Always &amp; forever</div></div>
+</div>
+
+<div class="section-header" id="gallerySection">
+  <h2>Gallery</h2>
+  <div class="filter-tabs">
+    <button class="filter-tab active" onclick="filterTab(this,'all')">All</button>
+    <button class="filter-tab" onclick="filterTab(this,'nature')">Nature</button>
+    <button class="filter-tab" onclick="filterTab(this,'abstract')">Abstract</button>
+    <button class="filter-tab" onclick="filterTab(this,'space')">Space</button>
+    <button class="filter-tab" onclick="filterTab(this,'city')">City</button>
+    <button class="filter-tab" onclick="filterTab(this,'anime')">Anime</button>
+    <button class="filter-tab" onclick="filterTab(this,'car')">Car</button>
+  </div>
+</div>
+
+<div class="gallery" id="gallery">
+  <div class="loading-wrap"><div class="spinner"></div>Loading wallpapers...</div>
+</div>
+
+<button class="admin-login-btn" id="adminLoginBtn" onclick="openModal('pw')">&#128274; admin</button>
+<div class="admin-badge" id="adminBadge" onclick="logoutAdmin()">&#9679; Admin &nbsp;&middot;&nbsp; logout</div>
+
+<!-- Password Modal -->
+<div class="modal-bg" id="pwModal">
+  <div class="modal-box">
+    <h3>Admin Login</h3>
+    <p>Enter your password to upload wallpapers</p>
+    <input type="password" class="pw-input" id="pwInput" placeholder="Enter password" onkeydown="if(event.key==='Enter')checkPw()">
+    <div class="pw-error" id="pwError">Wrong password!</div>
+    <button class="pw-btn" onclick="checkPw()">Login</button>
+    <button class="pw-cancel" onclick="closeModal('pw')">Cancel</button>
+  </div>
+</div>
+
+<!-- Upload Details Modal -->
+<div class="modal-bg" id="uploadModal">
+  <div class="modal-box">
+    <h3>Add wallpaper details</h3>
+    <div class="form-group"><label>Title</label><input type="text" id="wpTitle" placeholder="e.g. Neon City Nights"></div>
+    <div class="form-group"><label>Category</label>
+      <select id="wpCat">
+        <option value="nature">Nature</option><option value="abstract">Abstract</option>
+        <option value="space">Space</option><option value="city">City</option>
+        <option value="aesthetic">Aesthetic</option><option value="dark">Dark</option>
+        <option value="minimal">Minimal</option><option value="anime">Anime</option>
+        <option value="car">Car</option><option value="other">Other</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Resolution</label>
+      <select id="wpRes"><option>4K (3840x2160)</option><option>1440p (2560x1440)</option><option>1080p (1920x1080)</option><option>Other</option></select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('upload')">Cancel</button>
+      <button class="btn-primary" id="publishBtn" onclick="publishWP()">Publish</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-bg" id="editModal">
+  <div class="modal-box">
+    <h3>&#9998; Edit Wallpaper</h3>
+    <div class="form-group"><label>Title</label><input type="text" id="editTitle" placeholder="Wallpaper title"></div>
+    <div class="form-group"><label>Category</label>
+      <select id="editCat">
+        <option value="nature">Nature</option><option value="abstract">Abstract</option>
+        <option value="space">Space</option><option value="city">City</option>
+        <option value="aesthetic">Aesthetic</option><option value="dark">Dark</option>
+        <option value="minimal">Minimal</option><option value="anime">Anime</option>
+        <option value="car">Car</option><option value="other">Other</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Resolution</label>
+      <select id="editRes"><option>4K (3840x2160)</option><option>1440p (2560x1440)</option><option>1080p (1920x1080)</option><option>Other</option></select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('edit')">Cancel</button>
+      <button class="btn-primary" onclick="saveEdit()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  WallFlow &mdash; Free 4K PC Live Wallpapers &mdash; Powered by Cloudinary &amp; Firebase<br>
+  <span style="font-size:0.68rem;color:rgba(240,238,232,0.2);">created by sparsh yadav</span>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script>
+var firebaseConfig = {
+  apiKey: "AIzaSyDtzy0T9i-3zlpJElcexKp5vyb42yedPlw",
+  authDomain: "wallflow-ce624.firebaseapp.com",
+  projectId: "wallflow-ce624",
+  storageBucket: "wallflow-ce624.firebasestorage.app",
+  messagingSenderId: "411190122130",
+  appId: "1:411190122130:web:f8c8eb2ec39ccb87cab84b",
+  databaseURL: "https://wallflow-2cac8-default-rtdb.firebaseio.com"
+};
+firebase.initializeApp(firebaseConfig);
+var db = firebase.database();
+
+var CLOUD='duhkpjguc', PRESET='wallflow_uploads', PASS='sparsh201011';
+var currentFilter='all', pendingId=null, isAdmin=false, allWP=[], editKey=null;
+
+function loadWallpapers(){
+  document.getElementById('gallery').innerHTML='<div class="loading-wrap"><div class="spinner"></div>Loading wallpapers...</div>';
+  db.ref('wallpapers').on('value',function(snap){
+    var data=snap.val(); allWP=[];
+    if(data){
+      Object.keys(data).forEach(function(k){
+        var item=data[k]; item.key=k; allWP.push(item);
+      });
+      allWP.reverse();
+    }
+    render();
+  },function(e){
+    console.error(e);
+    document.getElementById('gallery').innerHTML='<div class="empty-state">Could not load. Please refresh!</div>';
+  });
+}
+
+function render(){
+  var g=document.getElementById('gallery');
+  var list=currentFilter==='all'?allWP:allWP.filter(function(w){return w.cat===currentFilter;});
+  g.innerHTML='';
+  if(!list.length){g.innerHTML='<div class="empty-state">No wallpapers yet — check back soon!</div>';}
+  else{list.forEach(function(w){if(w.pid)g.appendChild(makeCard(w));});}
+  document.getElementById('statCount').textContent=allWP.length;
+}
+
+function makeCard(w){
+  var c=document.createElement('div');
+  c.className='wallpaper-card'; c.dataset.category=w.cat||'other';
+  var url='https://res.cloudinary.com/'+CLOUD+'/video/upload/'+w.pid+'.mp4';
+  var safe=(w.title||'').replace(/'/g,'').replace(/"/g,'');
+  var adminBtns=isAdmin?
+    '<button class="card-action-btn" style="background:rgba(167,139,250,0.4)" title="Edit" id="edit_'+w.key+'">&#9998;</button>'+
+    '<button class="card-action-btn" style="background:rgba(248,113,113,0.4)" title="Delete" id="del_'+w.key+'">&#128465;</button>':'';
+  c.innerHTML=
+    '<video src="'+url+'" autoplay loop muted playsinline></video>'+
+    '<div class="live-badge">Live</div>'+
+    '<div class="res-badge">'+(w.res||'4K')+'</div>'+
+    '<div class="card-overlay">'+
+      '<div class="card-info">'+
+        '<div class="card-title">'+(w.title||'Untitled')+'</div>'+
+        '<div class="card-meta">'+(w.cat||'other')+' &middot; 16:9 PC</div>'+
+      '</div>'+
+      '<div class="card-actions">'+
+        '<button class="card-action-btn" id="dl_'+w.key+'">&#8595;</button>'+
+        adminBtns+
+      '</div>'+
+    '</div>';
+  c.addEventListener('mouseenter',function(){c.querySelector('.card-overlay').style.opacity='1';var v=c.querySelector('video');if(v)v.style.transform='scale(1.04)';});
+  c.addEventListener('mouseleave',function(){c.querySelector('.card-overlay').style.opacity='0';var v=c.querySelector('video');if(v)v.style.transform='scale(1)';});
+  // attach events safely
+  setTimeout(function(){
+    var dlBtn=document.getElementById('dl_'+w.key);
+    if(dlBtn)dlBtn.onclick=function(e){e.stopPropagation();dl(url,safe);};
+    if(isAdmin){
+      var editBtn=document.getElementById('edit_'+w.key);
+      var delBtn=document.getElementById('del_'+w.key);
+      if(editBtn)editBtn.onclick=function(e){e.stopPropagation();openEditModal(w);};
+      if(delBtn)delBtn.onclick=function(e){e.stopPropagation();deleteWP(w.key);};
+    }
+  },0);
+  return c;
+}
+
+function dl(url,title){
+  var a=document.createElement('a');a.href=url;a.download=(title||'wallpaper')+'.mp4';a.target='_blank';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+}
+
+function openEditModal(w){
+  editKey=w.key;
+  document.getElementById('editTitle').value=w.title||'';
+  document.getElementById('editCat').value=w.cat||'other';
+  var resVal=w.res||'4K';
+  var resEl=document.getElementById('editRes');
+  for(var i=0;i<resEl.options.length;i++){if(resEl.options[i].text.startsWith(resVal)){resEl.selectedIndex=i;break;}}
+  openModal('edit');
+}
+
+function saveEdit(){
+  if(!editKey)return;
+  var title=document.getElementById('editTitle').value||'Untitled';
+  var cat=document.getElementById('editCat').value;
+  var res=document.getElementById('editRes').value.split(' ')[0];
+  db.ref('wallpapers/'+editKey).update({title:title,cat:cat,res:res})
+  .then(function(){closeModal('edit');showToast('Updated! ✅');})
+  .catch(function(){showToast('Update failed. Try again!');});
+}
+
+function deleteWP(key){
+  if(!isAdmin)return;
+  if(!confirm('Delete this wallpaper permanently?'))return;
+  db.ref('wallpapers/'+key).remove()
+  .then(function(){showToast('Deleted!');})
+  .catch(function(){showToast('Delete failed.');});
+}
+
+function openModal(id){
+  if(id==='pw'){document.getElementById('pwInput').value='';document.getElementById('pwError').style.display='none';}
+  document.getElementById(id+'Modal').classList.add('open');
+  if(id==='pw')setTimeout(function(){document.getElementById('pwInput').focus();},200);
+}
+function closeModal(id){document.getElementById(id+'Modal').classList.remove('open');}
+
+function checkPw(){
+  if(document.getElementById('pwInput').value===PASS){
+    isAdmin=true;closeModal('pw');setAdmin(true);showToast('Welcome back, Sparsh! 👋');
+  } else {
+    document.getElementById('pwError').style.display='block';
+    document.getElementById('pwInput').value='';
+    document.getElementById('pwInput').focus();
+  }
+}
+
+function logoutAdmin(){isAdmin=false;setAdmin(false);showToast('Logged out.');}
+
+function setAdmin(a){
+  document.getElementById('uploadSection').style.display=a?'block':'none';
+  document.getElementById('navUploadBtn').style.display=a?'inline-block':'none';
+  document.getElementById('viewerNote').style.display=a?'none':'block';
+  document.getElementById('adminLoginBtn').style.display=a?'none':'inline-block';
+  document.getElementById('adminBadge').style.display=a?'flex':'none';
+  render();
+}
+
+var zone=document.getElementById('uploadZone');
+zone.addEventListener('dragover',function(e){e.preventDefault();zone.classList.add('drag-over');});
+zone.addEventListener('dragleave',function(){zone.classList.remove('drag-over');});
+zone.addEventListener('drop',function(e){e.preventDefault();zone.classList.remove('drag-over');if(isAdmin)handleFiles(e.dataTransfer.files);});
+document.getElementById('fileInput').addEventListener('change',function(e){if(isAdmin)handleFiles(e.target.files);e.target.value='';});
+
+function handleFiles(files){Array.from(files).forEach(function(f){if(!f.type.startsWith('video/')){showToast('Only video files!');return;}uploadFile(f);});}
+
+function uploadFile(file){
+  var g=document.getElementById('gallery');
+  var id='up'+Date.now();
+  var wrap=document.createElement('div');wrap.className='uploading-card';wrap.id=id;
+  var blobUrl=URL.createObjectURL(file);
+  var vid=document.createElement('video');vid.src=blobUrl;vid.autoplay=true;vid.loop=true;vid.muted=true;vid.playsInline=true;
+  vid.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;';
+  var ovr=document.createElement('div');ovr.className='progress-overlay';
+  ovr.innerHTML='<div class="progress-bar-wrap"><div class="progress-bar-fill" id="b'+id+'" style="width:0%"></div></div><div class="progress-text" id="p'+id+'">Uploading... 0%</div>';
+  wrap.appendChild(vid);wrap.appendChild(ovr);
+  var es=g.querySelector('.empty-state,.loading-wrap');if(es)es.remove();
+  g.prepend(wrap);
+  document.getElementById('gallerySection').scrollIntoView({behavior:'smooth',block:'start'});
+  var fd=new FormData();fd.append('file',file);fd.append('upload_preset',PRESET);
+  var xhr=new XMLHttpRequest();
+  xhr.open('POST','https://api.cloudinary.com/v1_1/'+CLOUD+'/video/upload',true);
+  xhr.upload.onprogress=function(e){
+    if(e.lengthComputable){
+      var p=Math.round(e.loaded/e.total*100);
+      var b=document.getElementById('b'+id);var pt=document.getElementById('p'+id);
+      if(b)b.style.width=p+'%';if(pt)pt.textContent='Uploading... '+p+'%';
+    }
+  };
+  xhr.onload=function(){
+    var el=document.getElementById(id);if(el)el.remove();
+    if(xhr.status===200){
+      var r=JSON.parse(xhr.responseText);
+      pendingId=r.public_id;
+      var t=file.name.replace(/\.[^/.]+$/,'').replace(/[-_]/g,' ');
+      document.getElementById('wpTitle').value=t.substring(0,50);
+      showToast('Uploaded! Add details.');
+      setTimeout(function(){openModal('upload');},300);
+    } else {showToast('Upload failed!');}
+  };
+  xhr.onerror=function(){var el=document.getElementById(id);if(el)el.remove();showToast('Network error.');};
+  xhr.send(fd);
+}
+
+function publishWP(){
+  if(!pendingId){closeModal('upload');return;}
+  var title=document.getElementById('wpTitle').value||'Untitled';
+  var cat=document.getElementById('wpCat').value;
+  var res=document.getElementById('wpRes').value.split(' ')[0];
+  var btn=document.getElementById('publishBtn');
+  btn.textContent='Saving...';btn.disabled=true;
+  db.ref('wallpapers').push({pid:pendingId,title:title,cat:cat,res:res,date:new Date().toISOString().split('T')[0]})
+  .then(function(){
+    btn.textContent='Publish';btn.disabled=false;
+    closeModal('upload');pendingId=null;
+    showToast('Published! Visible to everyone ✅');
+  })
+  .catch(function(e){
+    console.error(e);btn.textContent='Publish';btn.disabled=false;
+    showToast('Save failed! Try again.');
+  });
+}
+
+function filterTab(el,cat){
+  document.querySelectorAll('.filter-tab').forEach(function(t){t.classList.remove('active');});
+  el.classList.add('active');currentFilter=cat;render();
+}
+function filterByTag(cat){
+  currentFilter=cat;
+  document.querySelectorAll('.filter-tab').forEach(function(t){t.classList.toggle('active',t.textContent.toLowerCase()===cat);});
+  render();
+  document.getElementById('gallerySection').scrollIntoView({behavior:'smooth'});
+}
+function showToast(msg){
+  var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},3500);
+}
+
+setAdmin(false);
+loadWallpapers();
+</script>
+</body>
+</html>
