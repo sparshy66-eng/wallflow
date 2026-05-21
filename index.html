@@ -285,7 +285,7 @@ function makeCard(w){
     '<button class="card-action-btn" style="background:rgba(167,139,250,0.4)" title="Edit" id="edit_'+w.key+'">&#9998;</button>'+
     '<button class="card-action-btn" style="background:rgba(248,113,113,0.4)" title="Delete" id="del_'+w.key+'">&#128465;</button>':'';
   c.innerHTML=
-    '<video src="'+url+'" autoplay loop muted playsinline></video>'+
+    '<video src="'+url+'" poster="https://res.cloudinary.com/'+CLOUD+'/video/upload/so_1/'+w.pid+'.jpg" autoplay loop muted playsinline preload="none"></video>'+
     '<div class="live-badge">Live</div>'+
     '<div class="res-badge">'+(w.res||'4K')+'</div>'+
     '<div class="card-overlay">'+
