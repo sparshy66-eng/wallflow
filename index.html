@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="icon" type="image/jpeg" href="logo.jpeg">
   <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-06DNP6WVKH"></script>
 <script>
@@ -21,9 +22,33 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'DM Sans',sans-serif;background:#0a0a0f;color:#f0eee8;min-height:100vh}
 .nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:0.5px solid rgba(255,255,255,0.1);background:rgba(10,10,15,0.97);position:sticky;top:0;z-index:100}
-.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.35rem;background:linear-gradient(135deg,#a78bfa,#38bdf8,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.nav-links{display:flex;gap:1.5rem;list-style:none;font-size:0.85rem;color:rgba(240,238,232,0.5)}
-.nav-links li{cursor:pointer;transition:color 0.2s}
+.nav-links{
+display:flex;
+gap:1.5rem;
+list-style:none;
+font-size:0.85rem;
+color:rgba(240,238,232,0.5);
+}
+
+.logo{
+display:flex;
+align-items:center;
+gap:10px;
+font-family:'Syne',sans-serif;
+font-weight:800;
+font-size:1.35rem;
+}
+
+.logo img{
+width:45px;
+height:45px;
+border-radius:10px;
+}
+
+.nav-links li{
+cursor:pointer;
+transition:color 0.2s;
+}
 .nav-links li:hover{color:#f0eee8}
 .upload-btn-nav{background:#a78bfa;color:#0a0a0f;border:none;padding:0.45rem 1.1rem;border-radius:999px;font-family:'DM Sans',sans-serif;font-weight:500;font-size:0.83rem;cursor:pointer;display:none}
 .hero{text-align:center;padding:3.5rem 2rem 2rem}
@@ -102,7 +127,10 @@ footer{text-align:center;padding:2rem;border-top:0.5px solid rgba(255,255,255,0.
 <body>
 
 <nav class="nav">
-  <div class="logo">WallFlow</div>
+  <div class="logo">
+  <img src="logo.jpeg" alt="WallFlow Logo">
+  <span>WallFlow</span>
+</div>
   <ul class="nav-links">
     <li onclick="document.getElementById('gallerySection').scrollIntoView({behavior:'smooth'})">Gallery</li>
   </ul>
