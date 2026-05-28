@@ -177,11 +177,11 @@ footer{text-align:center;padding:2rem;border-top:0.5px solid rgba(255,255,255,0.
 <section class="featured-videos">
 
   <div class="video-card">
-    <video autoplay muted loop playsinline>
+    <video class="wall-video" poster="thumbnail1.jpg" preload="none">
       <source src="video1.mp4" type="video/mp4">
     </video>
   </div>
-
+</section>
 <div class="section-header" id="gallerySection">
   <h2>Gallery</h2>
   <div class="filter-tabs">
@@ -515,7 +515,16 @@ loadWallpapers();
 
 </footer>
 
+<script>
+document.querySelectorAll('.wall-video').forEach(video => {
+
+  video.addEventListener('click', () => {
+    window.open(video.querySelector('source').src, '_blank');
+  });
+
+});
+</script>
+
 </body>
 </html>
-</body>
-</html>
+
